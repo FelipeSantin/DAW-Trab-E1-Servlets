@@ -1,9 +1,3 @@
-<%-- 
-    Document   : formulario
-    Created on : 17/09/2016, 18:22:16
-    Author     : Felipe
---%>
-
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="br.edu.ifsul.modelo.Aluguel"%>
 <%@page import="br.edu.ifsul.dao.AluguelDao"%>
@@ -53,7 +47,7 @@
                         }                  
                       }
                 %>    
-                    <option value="<%=a.getId()%>" <%=selected%> > <%=a.getId()%> </option>
+                    <option value="<%=a.getId()%>" <%=selected%> > <%= " Aluguel de " + new SimpleDateFormat("dd-MM-yyyy").format(a.getInicioContrato().getTime()) + " até " + new SimpleDateFormat("dd-MM-yyyy").format(a.getFimContrato().getTime())%> </option>
                 <%
                   }  
                 %>                        

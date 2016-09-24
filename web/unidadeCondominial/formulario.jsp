@@ -53,7 +53,7 @@
                         }                  
                       }
                 %>    
-                    <option value="<%=p.getId()%>" <%=selected%> > <%=p.getId()%> </option>
+                    <option value="<%=p.getId()%>" <%=selected%> > <%=p.getNome()%> </option>
                 <%
                   }  
                 %>                        
@@ -69,7 +69,7 @@
                         }                  
                       }
                 %>    
-                    <option value="<%=c.getId()%>" <%=selected%> > <%=c.getId()%> </option>
+                    <option value="<%=c.getId()%>" <%=selected%> > <%=c.getNome()%> </option>
                 <%
                   }  
                 %>                        

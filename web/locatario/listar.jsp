@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listar
-    Created on : 17/09/2016, 18:25:42
-    Author     : Felipe
---%>
-
 <%@page import="br.edu.ifsul.modelo.Locatario"%>
 <%@page import="br.edu.ifsul.dao.LocatarioDao"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>

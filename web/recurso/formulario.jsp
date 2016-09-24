@@ -1,9 +1,3 @@
-<%-- 
-    Document   : formulario
-    Created on : 17/09/2016, 20:32:16
-    Author     : Felipe
---%>
-
 <%@page import="br.edu.ifsul.dao.RecursoDao"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <jsp:useBean id="recursoDao" scope="session" type="RecursoDao"/>

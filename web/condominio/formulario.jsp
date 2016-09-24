@@ -1,9 +1,3 @@
-<%-- 
-    Document   : formulario
-    Created on : 17/09/2016, 20:42:46
-    Author     : Felipe
---%>
-
 <%@page import="br.edu.ifsul.dao.CondominioDao"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <jsp:useBean id="condominioDao" scope="session" type="CondominioDao"/>

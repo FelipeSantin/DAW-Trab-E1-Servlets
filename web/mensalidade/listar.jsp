@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listar
-    Created on : 17/09/2016, 18:25:42
-    Author     : Felipe
---%>
-
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="br.edu.ifsul.modelo.Mensalidade"%>
 <%@page import="br.edu.ifsul.dao.MensalidadeDao"%>
@@ -43,7 +37,7 @@
                     <td><%=m.getValorPagamento()%></td>
                     <td><%=new SimpleDateFormat("dd/MM/yyyy").format(m.getVencimento().getTime())%></td>
                     <td><%=new SimpleDateFormat("dd/MM/yyyy").format(m.getVencimentoPagamento().getTime())%></td>
-                    <td><%=m.getAluguel().getId()%></td>
+                    <td><%=" Aluguel de " + new SimpleDateFormat("dd-MM-yyyy").format(m.getAluguel().getInicioContrato().getTime()) + " até " + new SimpleDateFormat("dd-MM-yyyy").format(m.getAluguel().getFimContrato().getTime())%></td>
                     <td><a href="ServletMensalidade?acao=alterar&id=<%=m.getId()%>">Alterar</a></td>
                     <td><a href="ServletMensalidade?acao=excluir&id=<%=m.getId()%>">Excluir</a></td>
                 </tr>

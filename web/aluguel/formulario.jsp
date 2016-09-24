@@ -51,7 +51,7 @@
                         }                  
                       }
                 %>    
-                    <option value="<%=l.getId()%>" <%=selected%> > <%=l.getId()%> </option>
+                <option value="<%=l.getId()%>" <%=selected%> > <%=l.getNome()%> </option>
                 <%
                   }  
                 %>                        
@@ -67,7 +67,7 @@
                         }                  
                       }
                 %>    
-                    <option value="<%=uc.getId()%>" <%=selected%> > <%=uc.getId()%> </option>
+                    <option value="<%=uc.getId()%>" <%=selected%> > <%=uc.getDescricao()%> </option>
                 <%
                   }  
                 %>                        

@@ -1,9 +1,3 @@
-<%-- 
-    Document   : listar
-    Created on : 17/09/2016, 20:45:22
-    Author     : Felipe
---%>
-
 <%@page import="br.edu.ifsul.modelo.Condominio"%>
 <%@page import="br.edu.ifsul.dao.CondominioDao"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>

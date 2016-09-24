@@ -1,9 +1,3 @@
-<%-- 
-    Document   : formulario
-    Created on : 17/09/2016, 18:22:16
-    Author     : Felipe
---%>
-
 <%@page import="br.edu.ifsul.dao.LocatarioDao"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <jsp:useBean id="locatarioDao" scope="session" type="LocatarioDao"/>
