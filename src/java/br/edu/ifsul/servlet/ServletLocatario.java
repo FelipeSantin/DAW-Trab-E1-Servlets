@@ -68,7 +68,12 @@ public class ServletLocatario extends HttpServlet {
             obj.setLocaltrabalho(request.getParameter("localtrabalho"));
             obj.setTelefonetrabalho(request.getParameter("telefonetrabalho"));
             obj.setTelefone(request.getParameter("telefone"));
-            obj.setRenda(Double.parseDouble(request.getParameter("renda")));
+            try {
+                obj.setRenda(Double.parseDouble(request.getParameter("renda")));
+            } catch (Exception e) {
+                obj.setRenda(null);
+            }
+            
             dao.setObjetoSelecionado(obj);
             if(dao.validaObjeto(obj)){
                 dao.salvar(obj);

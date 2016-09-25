@@ -67,19 +67,25 @@ public class ServletUnidadeCond extends HttpServlet {
             try {
                 id = Integer.parseInt(request.getParameter("id"));
             } catch (Exception e) {
-                System.out.println("Erro ao converter");
+                System.out.println("Erro ao converter id");
             }
             
             dao.getObjetoSelecionado().setId(id);
             dao.getObjetoSelecionado().setNumero(request.getParameter("numero"));
             
             dao.getObjetoSelecionado().setDescricao(request.getParameter("descricao"));
-            dao.getObjetoSelecionado().setArea(Double.parseDouble(request.getParameter("area")));
+            try {
+                dao.getObjetoSelecionado().setArea(Double.parseDouble(request.getParameter("area")));
+            } catch (Exception e) {
+                dao.getObjetoSelecionado().setArea(null);
+            }
+            
             
             try {
                 dao.getObjetoSelecionado().setNumeroquarto(Integer.parseInt(request.getParameter("numeroquarto")));
             } catch (Exception e) {
-                System.out.println("Erro ao converter");
+                System.out.println("Erro ao converter numero quarto");
+                dao.getObjetoSelecionado().setNumeroquarto(null);
             }
             
             Integer idPessoa = null;

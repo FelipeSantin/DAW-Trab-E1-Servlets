@@ -60,7 +60,7 @@ public class ServletRecurso extends HttpServlet {
                 tela = "listar.jsp";
             }
         }else if(acao.equals("salvar")){
-            dao.setObjetoSelecionado(criaRecurso(request));
+            dao.setObjetoSelecionado(criaRecurso(dao.getObjetoSelecionado(),request));
             if(dao.validaObjeto(dao.getObjetoSelecionado())){
                 dao.salvar(dao.getObjetoSelecionado());
                 tela = "listar.jsp";
@@ -68,9 +68,7 @@ public class ServletRecurso extends HttpServlet {
                 tela = "formulario.jsp";
             }
         }else if(acao.equals("salvarItem")){
-            if(dao.getObjetoSelecionado().getId() == 0){
-                dao.setObjetoSelecionado(criaRecurso(request));
-            }
+            dao.setObjetoSelecionado(criaRecurso(dao.getObjetoSelecionado(),request));
             
             List<Condominio> listCond = dao.getObjetoSelecionado().getCond_Rec();
             try {
@@ -84,6 +82,13 @@ public class ServletRecurso extends HttpServlet {
             
             if(dao.validaObjeto(dao.getObjetoSelecionado())){
                 dao.salvar(dao.getObjetoSelecionado());
+            }else{
+                try {
+                    Condominio cond = daoCondominio.localizar(Integer.parseInt(request.getParameter("idCond")));
+                    listCond.remove(cond);
+                } catch (Exception e) {
+                    System.out.println("Erro ao converter condominio");
+                }
             }
             tela = "formulario.jsp";
             
@@ -112,14 +117,19 @@ public class ServletRecurso extends HttpServlet {
         response.sendRedirect(tela);
     }
 
-    public Recurso criaRecurso(HttpServletRequest request){
+    public Recurso criaRecurso(Recurso r, HttpServletRequest request){
         Integer id = null;
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (Exception e) {
             System.out.println("Erro ao converter");
         }
-        Recurso obj = new Recurso();
+        Recurso obj;
+        if(id == null){
+            obj = new Recurso();
+        }else{
+            obj = r;
+        }
         obj.setId(id);
         obj.setDescricao(request.getParameter("descricao"));
         return obj;

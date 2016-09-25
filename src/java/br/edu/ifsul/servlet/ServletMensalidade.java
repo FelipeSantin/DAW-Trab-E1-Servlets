@@ -65,12 +65,20 @@ public class ServletMensalidade extends HttpServlet {
             try {
                 id = Integer.parseInt(request.getParameter("id"));
             } catch (Exception e) {
-                System.out.println("Erro ao converter");
+                System.out.println("Erro ao converter id");
             }
             
             dao.getObjetoSelecionado().setId(id);
-            dao.getObjetoSelecionado().setValor(Double.parseDouble(request.getParameter("valor")));
-            dao.getObjetoSelecionado().setValorPagamento(Double.parseDouble(request.getParameter("valorpagamento")));
+            try {
+                dao.getObjetoSelecionado().setValor(Double.parseDouble(request.getParameter("valor")));
+            } catch (Exception e) {
+                dao.getObjetoSelecionado().setValor(null);
+            }
+            try {
+                dao.getObjetoSelecionado().setValorPagamento(Double.parseDouble(request.getParameter("valorpagamento")));
+            } catch (Exception e) {
+                dao.getObjetoSelecionado().setValorPagamento(null);
+            }
             
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             sdf.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));

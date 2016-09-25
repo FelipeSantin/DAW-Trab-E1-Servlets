@@ -60,7 +60,8 @@ public class ServletCondominio extends HttpServlet {
                 tela = "listar.jsp";
             }
         }else if(acao.equals("salvar")){
-            dao.setObjetoSelecionado(criaCondominio(request));
+            dao.setObjetoSelecionado(criaCondominio(dao.getObjetoSelecionado(),request));
+            
             if(dao.validaObjeto(dao.getObjetoSelecionado())){
                 dao.salvar(dao.getObjetoSelecionado());
                 tela = "listar.jsp";
@@ -68,9 +69,7 @@ public class ServletCondominio extends HttpServlet {
                 tela = "formulario.jsp";
             }
         }else if(acao.equals("salvarItem")){
-            if(dao.getObjetoSelecionado().getId() == 0){
-                dao.setObjetoSelecionado(criaCondominio(request));
-            }
+            dao.setObjetoSelecionado(criaCondominio(dao.getObjetoSelecionado(),request));
             List<Recurso> listRec = dao.getObjetoSelecionado().getCond_Rec();
             try {
                 Recurso r = daoRecurso.localizar(Integer.parseInt(request.getParameter("idRec")));
@@ -83,6 +82,13 @@ public class ServletCondominio extends HttpServlet {
             
             if(dao.validaObjeto(dao.getObjetoSelecionado())){
                 dao.salvar(dao.getObjetoSelecionado());
+            }else{
+                try {
+                    Recurso r = daoRecurso.localizar(Integer.parseInt(request.getParameter("idRec")));
+                    listRec.remove(r);
+                } catch (Exception e) {
+                    System.out.println("Erro ao converter condominio");
+                }
             }
             tela = "formulario.jsp";
             
@@ -110,14 +116,20 @@ public class ServletCondominio extends HttpServlet {
         request.getSession().setAttribute("recursoDao", daoRecurso);
         response.sendRedirect(tela);
     }
-    private Condominio criaCondominio(HttpServletRequest request){
+    private Condominio criaCondominio(Condominio c, HttpServletRequest request){
         Integer id = null;
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (Exception e) {
             System.out.println("Erro ao converter");
         }
-        Condominio obj = new Condominio();
+        Condominio obj;
+        if(id == null){
+            obj = new Condominio();
+        }else{
+            obj = c;
+        }
+        
         obj.setId(id);
         obj.setNome(request.getParameter("nome"));
         obj.setNumero(request.getParameter("numero"));

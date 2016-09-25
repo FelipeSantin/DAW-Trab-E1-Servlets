@@ -70,11 +70,15 @@ public class ServletAluguel extends HttpServlet {
             try {
                 id = Integer.parseInt(request.getParameter("id"));
             } catch (Exception e) {
-                System.out.println("Erro ao converter");
+                System.out.println("Erro ao converter id");
             }
             
             dao.getObjetoSelecionado().setId(id);
-            dao.getObjetoSelecionado().setValor(Double.parseDouble(request.getParameter("valor")));
+            try {
+                dao.getObjetoSelecionado().setValor(Double.parseDouble(request.getParameter("valor")));
+            } catch (Exception e) {
+                dao.getObjetoSelecionado().setValor(null);
+            }
             
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             sdf.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
@@ -100,7 +104,8 @@ public class ServletAluguel extends HttpServlet {
             try {
                 dao.getObjetoSelecionado().setDiaVencimento(Integer.parseInt(request.getParameter("diavencimento")));
             } catch (Exception e) {
-                System.out.println("Erro ao converter");
+                System.out.println("Erro ao converter dia");
+                dao.getObjetoSelecionado().setDiaVencimento(null);
             }
             
             Integer idLocatario = null;
