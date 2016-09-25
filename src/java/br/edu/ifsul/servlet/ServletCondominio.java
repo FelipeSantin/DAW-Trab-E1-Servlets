@@ -1,8 +1,11 @@
 package br.edu.ifsul.servlet;
 
 import br.edu.ifsul.dao.CondominioDao;
+import br.edu.ifsul.dao.RecursoDao;
 import br.edu.ifsul.modelo.Condominio;
+import br.edu.ifsul.modelo.Recurso;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +33,10 @@ public class ServletCondominio extends HttpServlet {
         if(dao == null){
             dao = new CondominioDao();
         }
+        RecursoDao daoRecurso = (RecursoDao) request.getSession().getAttribute("recursoDao");
+        if(daoRecurso == null){
+            daoRecurso = new RecursoDao();
+        }
         String tela = "";
         String acao = request.getParameter("acao");
         if(acao == null){
@@ -53,33 +60,72 @@ public class ServletCondominio extends HttpServlet {
                 tela = "listar.jsp";
             }
         }else if(acao.equals("salvar")){
-            Integer id = null;
-            try {
-                id = Integer.parseInt(request.getParameter("id"));
-            } catch (Exception e) {
-                System.out.println("Erro ao converter");
-            }
-            Condominio obj = new Condominio();
-            obj.setId(id);
-            obj.setNome(request.getParameter("nome"));
-            obj.setNumero(request.getParameter("numero"));
-            obj.setEndereco(request.getParameter("endereco"));
-            obj.setCep(request.getParameter("cep"));
-            dao.setObjetoSelecionado(obj);
-            if(dao.validaObjeto(obj)){
-                dao.salvar(obj);
+            dao.setObjetoSelecionado(criaCondominio(request));
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
                 tela = "listar.jsp";
             }else{
                 tela = "formulario.jsp";
             }
+        }else if(acao.equals("salvarItem")){
+            if(dao.getObjetoSelecionado().getId() == 0){
+                dao.setObjetoSelecionado(criaCondominio(request));
+            }
+            List<Recurso> listRec = dao.getObjetoSelecionado().getCond_Rec();
+            try {
+                Recurso r = daoRecurso.localizar(Integer.parseInt(request.getParameter("idRec")));
+                listRec.add(r);
+            } catch (Exception e) {
+                System.out.println("Erro ao converter condominio");
+            }
+
+            dao.getObjetoSelecionado().setCond_Rec(listRec);
+            
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
+            }
+            tela = "formulario.jsp";
+            
+        }else if(acao.equals("excluirItem")){
+            
+            List<Recurso> listRec = dao.getObjetoSelecionado().getCond_Rec();
+            try {
+                Recurso rec = daoRecurso.localizar(Integer.parseInt(request.getParameter("idCond")));
+                listRec.remove(rec);
+            } catch (Exception e) {
+                System.out.println("Erro ao converter condominio");
+            }
+
+            dao.getObjetoSelecionado().setCond_Rec(listRec);
+            
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
+            }
+            tela = "formulario.jsp";
         }else if(acao.equals("cancelar")){
             tela = "listar.jsp";
             dao.setMensagem("");
         }
         request.getSession().setAttribute("condominioDao", dao);
+        request.getSession().setAttribute("recursoDao", daoRecurso);
         response.sendRedirect(tela);
     }
-
+    private Condominio criaCondominio(HttpServletRequest request){
+        Integer id = null;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (Exception e) {
+            System.out.println("Erro ao converter");
+        }
+        Condominio obj = new Condominio();
+        obj.setId(id);
+        obj.setNome(request.getParameter("nome"));
+        obj.setNumero(request.getParameter("numero"));
+        obj.setEndereco(request.getParameter("endereco"));
+        obj.setCep(request.getParameter("cep"));
+        
+        return obj;
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

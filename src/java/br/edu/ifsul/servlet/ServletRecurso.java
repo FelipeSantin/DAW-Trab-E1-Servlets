@@ -1,8 +1,11 @@
 package br.edu.ifsul.servlet;
 
+import br.edu.ifsul.dao.CondominioDao;
 import br.edu.ifsul.dao.RecursoDao;
+import br.edu.ifsul.modelo.Condominio;
 import br.edu.ifsul.modelo.Recurso;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +33,10 @@ public class ServletRecurso extends HttpServlet {
         if(dao == null){
             dao = new RecursoDao();
         }
+        CondominioDao daoCondominio = (CondominioDao) request.getSession().getAttribute("condominioDao");
+        if(daoCondominio == null){
+            daoCondominio = new CondominioDao();
+        }
         String tela = "";
         String acao = request.getParameter("acao");
         if(acao == null){
@@ -53,30 +60,71 @@ public class ServletRecurso extends HttpServlet {
                 tela = "listar.jsp";
             }
         }else if(acao.equals("salvar")){
-            Integer id = null;
-            try {
-                id = Integer.parseInt(request.getParameter("id"));
-            } catch (Exception e) {
-                System.out.println("Erro ao converter");
-            }
-            Recurso obj = new Recurso();
-            obj.setId(id);
-            obj.setDescricao(request.getParameter("descricao"));
-            dao.setObjetoSelecionado(obj);
-            if(dao.validaObjeto(obj)){
-                dao.salvar(obj);
+            dao.setObjetoSelecionado(criaRecurso(request));
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
                 tela = "listar.jsp";
             }else{
                 tela = "formulario.jsp";
             }
+        }else if(acao.equals("salvarItem")){
+            if(dao.getObjetoSelecionado().getId() == 0){
+                dao.setObjetoSelecionado(criaRecurso(request));
+            }
+            
+            List<Condominio> listCond = dao.getObjetoSelecionado().getCond_Rec();
+            try {
+                Condominio cond = daoCondominio.localizar(Integer.parseInt(request.getParameter("idCond")));
+                listCond.add(cond);
+            } catch (Exception e) {
+                System.out.println("Erro ao converter condominio");
+            }
+
+            dao.getObjetoSelecionado().setCond_Rec(listCond);
+            
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
+            }
+            tela = "formulario.jsp";
+            
+        }else if(acao.equals("excluirItem")){
+            
+            List<Condominio> listCond = dao.getObjetoSelecionado().getCond_Rec();
+            try {
+                Condominio cond = daoCondominio.localizar(Integer.parseInt(request.getParameter("idCond")));
+                listCond.remove(cond);
+            } catch (Exception e) {
+                System.out.println("Erro ao converter condominio");
+            }
+
+            dao.getObjetoSelecionado().setCond_Rec(listCond);
+            
+            if(dao.validaObjeto(dao.getObjetoSelecionado())){
+                dao.salvar(dao.getObjetoSelecionado());
+            }
+            tela = "formulario.jsp";
         }else if(acao.equals("cancelar")){
             tela = "listar.jsp";
             dao.setMensagem("");
         }
         request.getSession().setAttribute("recursoDao", dao);
+        request.getSession().setAttribute("condominioDao", daoCondominio);
         response.sendRedirect(tela);
     }
 
+    public Recurso criaRecurso(HttpServletRequest request){
+        Integer id = null;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (Exception e) {
+            System.out.println("Erro ao converter");
+        }
+        Recurso obj = new Recurso();
+        obj.setId(id);
+        obj.setDescricao(request.getParameter("descricao"));
+        return obj;
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

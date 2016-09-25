@@ -2,6 +2,7 @@ package br.edu.ifsul.dao;
 
 import br.edu.ifsul.jpa.EntityManagerUtil;
 import br.edu.ifsul.modelo.Condominio;
+import br.edu.ifsul.modelo.Recurso;
 import br.edu.ifsul.util.Util;
 import java.io.Serializable;
 import java.util.List;
@@ -40,7 +41,8 @@ public class CondominioDao implements Serializable{
     }
     
     public List<Condominio> getLista(){
-        return em.createQuery("from Condominio order by nome").getResultList();
+        List<Condominio> Lista = em.createQuery("from Condominio order by nome").getResultList();
+        return Lista;
     }
     
     public boolean salvar(Condominio obj){
